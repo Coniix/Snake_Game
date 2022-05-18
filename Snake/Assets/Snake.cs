@@ -35,6 +35,8 @@ public class Snake : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.D)) { //right - d
            if (_direction == Vector2.left) {}
            else {_direction = Vector2.right;}
+        } else if (Input.GetKeyDown(KeyCode.K)) { //kill - k
+            ResetState();
         }
     }
 
@@ -111,5 +113,7 @@ public class Snake : MonoBehaviour
         }
 
         this.transform.position = Vector3.zero;
+        this.currScore = 0;
+        scoreCounter.text = currScore.ToString();
     }
 }
