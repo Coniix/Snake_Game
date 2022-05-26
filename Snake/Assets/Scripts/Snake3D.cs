@@ -6,7 +6,7 @@ using TMPro;
 public class Snake3D : MonoBehaviour
 {
    public TMP_Text scoreCounter;
-    private Vector2 _direction = Vector2.right;
+    public Vector2 _direction = Vector2.up;
     private List<Transform> _segments = new List<Transform>();
     public Transform segmentPrefab;
     public int initSize = 3;
@@ -19,21 +19,33 @@ public class Snake3D : MonoBehaviour
 
     private void Update() 
     {
-        if (Input.GetKeyDown(KeyCode.W)) { //up - w
-            if (_direction == Vector2.down) {}
-            else {_direction = Vector2.up;}
-        } 
-        else if (Input.GetKeyDown(KeyCode.S)) { //down - s
-            if (_direction == Vector2.up) {}
-            else {_direction = Vector2.down;}
-        } 
-        else if (Input.GetKeyDown(KeyCode.A)) { //left - a
-           if (_direction == Vector2.right) {}
-           else {_direction = Vector2.left;}
+        if (Input.GetKeyDown(KeyCode.A)) { //left - a
+            if (_direction == Vector2.right) {
+               _direction = Vector2.up;
+            }
+            else if (_direction == Vector2.up){
+               _direction = Vector2.left;
+            }
+            else if (_direction == Vector2.left){
+               _direction = Vector2.down;
+            }
+            else if (_direction == Vector2.down){
+               _direction = Vector2.right;
+            }
         } 
         else if (Input.GetKeyDown(KeyCode.D)) { //right - d
-           if (_direction == Vector2.left) {}
-           else {_direction = Vector2.right;}
+           if (_direction == Vector2.right) {
+               _direction = Vector2.down;
+            }
+            else if (_direction == Vector2.up){
+               _direction = Vector2.right;
+            }
+            else if (_direction == Vector2.left){
+               _direction = Vector2.up;
+            }
+            else if (_direction == Vector2.down){
+               _direction = Vector2.left;
+            }
         } else if (Input.GetKeyDown(KeyCode.K)) { //kill - k
             ResetState();
         }
@@ -52,49 +64,74 @@ public class Snake3D : MonoBehaviour
         );
     }
 
-    private void Grow()
+    private void Grow(Color color)
     {
-        Transform segment = Instantiate(this.segmentPrefab);
-        segment.position = _segments[_segments.Count - 1].position;
-        _segments.Add(segment);
-        currScore++;
-        scoreCounter.text = currScore.ToString();
-        Debug.Log(currScore);
+        int segmentsToAdd = 0;
 
+        Debug.Log("Colour is " + color.ToString());
+
+        if(color == Color.green){
+            segmentsToAdd = 1;
+        }
+        else if(color == Color.yellow){
+            segmentsToAdd = 2;
+        }
+        else if(color == Color.red){
+            segmentsToAdd = 3;
+        }
+        else if(color == Color.blue){
+            segmentsToAdd = 4;
+        }
+        else if(color == Color.magenta){
+            segmentsToAdd = 5;
+        }
+        else if(color == Color.black){
+            segmentsToAdd = 6;
+        }
+        Debug.Log("Segments to add = " + segmentsToAdd);
+
+        for(int i = 0; i <= segmentsToAdd; i++){
+            Transform segment = Instantiate(this.segmentPrefab);
+            segment.position = _segments[_segments.Count - 1].position;
+            _segments.Add(segment);
+            currScore++;
+            scoreCounter.text = currScore.ToString();
+            //Debug.Log(currScore);
+        }
     }
 
     private void OnTriggerEnter(Collider other) 
     {
-        if (other.tag == "Food") { Grow(); }
+        if (other.tag == "Food") { Grow(other.GetComponent<MeshRenderer>().material.color); }
         else if (other.tag == "Obstacle") { ResetState(); }
         else if (other.tag == "Wall") { wrapAround(); }
     }
 
     private void wrapAround()
     {
-        if (this.transform.position.x >= 23) { //right to left
+        if (this.transform.position.x > 23) { //right to left
             this.transform.position = new Vector3(
-                this.transform.position.x - 47,
+                this.transform.position.x - 48,
                 0.5f,
                 this.transform.position.z
             );
-        } else if (this.transform.position.x <= -23) { //left to right
+        } else if (this.transform.position.x < -23) { //left to right
             this.transform.position = new Vector3(
-                this.transform.position.x + 47,
+                this.transform.position.x + 48,
                 0.5f,
                 this.transform.position.z
             );
-        } else if (this.transform.position.z >= 11) { //up to down
+        } else if (this.transform.position.z > 23) { //up to down
             this.transform.position = new Vector3(
                 this.transform.position.x,
                 0.5f,
-                this.transform.position.z - 23
+                this.transform.position.z - 48
             );
-        } else if (this.transform.position.z <= -11) { //down to up
+        } else if (this.transform.position.z < -23) { //down to up
             this.transform.position = new Vector3(
                 this.transform.position.x,
                 0.5f,
-                this.transform.position.z + 23
+                this.transform.position.z + 48
             );
         }
     }
