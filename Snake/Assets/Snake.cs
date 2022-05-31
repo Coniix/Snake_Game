@@ -7,11 +7,12 @@ public class Snake : MonoBehaviour
 {
     public TMP_Text scoreCounter;
     private Vector2 _direction = Vector2.right;
-    private List<Transform> _segments = new List<Transform>();
+    public List<Transform> segments = new List<Transform>();
     public Transform segmentPrefab;
     public int initSize = 3;
     public string MainMenu;
     public int currScore = 0;
+    
 
     private void Start()
     {
@@ -29,21 +30,22 @@ public class Snake : MonoBehaviour
             else {_direction = Vector2.down;}
         } 
         else if (Input.GetKeyDown(KeyCode.A)) { //left - a
-           if (_direction == Vector2.right) {}
-           else {_direction = Vector2.left;}
+        if (_direction == Vector2.right) {}
+        else {_direction = Vector2.left;}
         } 
         else if (Input.GetKeyDown(KeyCode.D)) { //right - d
-           if (_direction == Vector2.left) {}
-           else {_direction = Vector2.right;}
-        } else if (Input.GetKeyDown(KeyCode.K)) { //kill - k
+        if (_direction == Vector2.left) {}
+        else {_direction = Vector2.right;}
+        } 
+        else if (Input.GetKeyDown(KeyCode.K)) { //kill - k
             ResetState();
         }
     }
 
     private void FixedUpdate() 
-    {
-        for(int i = _segments.Count - 1; i > 0; i--) {
-            _segments[i].position = _segments[i - 1].position;
+    {   
+        for(int i = segments.Count - 1; i > 0; i--) {
+            segments[i].position = segments[i - 1].position;
         }
 
         this.transform.position = new Vector3(
@@ -56,12 +58,10 @@ public class Snake : MonoBehaviour
     private void Grow()
     {
         Transform segment = Instantiate(this.segmentPrefab);
-        segment.position = _segments[_segments.Count - 1].position;
-        _segments.Add(segment);
+        segment.position = segments[segments.Count - 1].position;
+        segments.Add(segment);
         currScore++;
         scoreCounter.text = currScore.ToString();
-        Debug.Log(currScore);
-
     }
 
     private void OnTriggerEnter2D(Collider2D other) 
@@ -102,14 +102,14 @@ public class Snake : MonoBehaviour
 
     private void ResetState()
     {
-        for(int i = 1; i < _segments.Count; i++) {
-            Destroy(_segments[i].gameObject);
+        for(int i = 1; i < segments.Count; i++) {
+            Destroy(segments[i].gameObject);
         }
-        _segments.Clear();
-        _segments.Add(this.transform);
+        segments.Clear();
+        segments.Add(this.transform);
 
         for(int i = 1; i < this.initSize; i++) {
-            _segments.Add(Instantiate(this.segmentPrefab));
+            segments.Add(Instantiate(this.segmentPrefab));
         }
 
         this.transform.position = Vector3.zero;
