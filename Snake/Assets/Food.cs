@@ -18,7 +18,8 @@ public class Food : MonoBehaviour
     private bool checkPos(float x, float y)
     {
         for(int i = 0; i < snake.segments.Count -1; i++) {
-            if(snake.segments[i].position.x == x && snake.segments[i].position.y == y) return false;
+            if(snake.segments[i].position.x == x && snake.segments[i].position.y == y) {
+                return false;}
         }
         return true;
     }

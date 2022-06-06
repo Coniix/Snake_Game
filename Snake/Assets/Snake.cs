@@ -13,10 +13,13 @@ public class Snake : MonoBehaviour
     public string MainMenu;
     public int currScore = 0;
     private bool stepped = false;
+
+    public GameOverScreen gameOver;
     
 
     private void Start()
     {
+        gameOver = FindObjectOfType<GameOverScreen>();
         ResetState();
     } 
 
@@ -75,7 +78,7 @@ public class Snake : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) 
     {
         if (other.tag == "Food") { Grow(); }
-        else if (other.tag == "Obstacle") { ResetState(); }
+        else if (other.tag == "Obstacle") { gameOver.isOver(); }
         else if (other.tag == "Wall") { wrapAround(); }
     }
 
@@ -108,7 +111,7 @@ public class Snake : MonoBehaviour
         }
     }
 
-    private void ResetState()
+    public void ResetState()
     {
         for(int i = 1; i < segments.Count; i++) {
             Destroy(segments[i].gameObject);
@@ -123,5 +126,6 @@ public class Snake : MonoBehaviour
         this.transform.position = Vector3.zero;
         this.currScore = 0;
         scoreCounter.text = currScore.ToString();
+        _direction = Vector2.right;
     }
 }
