@@ -6,6 +6,7 @@ public class Food : MonoBehaviour
     public AudioSource eatSoundSource;
     public AudioClip eatSound;
     public Snake snake;
+    public bool repositioned = false;
     
 
 
@@ -14,9 +15,12 @@ public class Food : MonoBehaviour
         RandomisePosition();
     }
 
-    private void trans(float x, float y) {
-        this.transform.position = new Vector3(x, y, 0.0f);
-        Debug.Log("transformed");
+    private bool checkPos(float x, float y)
+    {
+        for(int i = 0; i < snake.segments.Count -1; i++) {
+            if(snake.segments[i].position.x == x && snake.segments[i].position.y == y) return false;
+        }
+        return true;
     }
 
     private void RandomisePosition() 
@@ -25,20 +29,9 @@ public class Food : MonoBehaviour
     
         float x = Mathf.Round(Random.Range(bounds.min.x, bounds.max.x));
         float y = Mathf.Round(Random.Range(bounds.min.y, bounds.max.y));
-        Debug.Log(x + " " + y);
-
-        for(int i = 0; i < snake.segments.Count -1; i++) {
-            //Debug.Log(snake.segments[i].position);
-            //Debug.Log("x" + x);
-            //Debug.Log("y" + y);
-            if(snake.segments[i].position.x == x && snake.segments[i].position.y == y) {
-                Debug.Log("Error");
-                RandomisePosition();
-            }
-        }
-        //trans(x, y);
-        this.transform.position = new Vector3(x, y, 0.0f);
-        Debug.Log("Repositioned");
+    
+        if (checkPos(x, y)) this.transform.position = new Vector3(x, y, 0.0f);
+        else RandomisePosition();
     }
 
     private void OnTriggerEnter2D(Collider2D other) 

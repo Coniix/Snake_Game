@@ -1357,6 +1357,7 @@ MonoBehaviour:
   eatSoundSource: {fileID: 2127046770}
   eatSound: {fileID: 8300000, guid: 8f589dc7dbd88c44192c9dabe2e9a121, type: 3}
   snake: {fileID: 0}
+  repositioned: 0
 --- !u!1 &750341794
 GameObject:
   m_ObjectHideFlags: 0
@@ -1719,7 +1720,7 @@ MonoBehaviour:
   scoreCounter: {fileID: 268002401}
   segments: []
   segmentPrefab: {fileID: 2881143166253707092, guid: 6d85bd747f2a2c94bb104287249cc311, type: 3}
-  initSize: 1000
+  initSize: 3
   MainMenu: MainMenu
   currScore: 0
 --- !u!61 &914029917
