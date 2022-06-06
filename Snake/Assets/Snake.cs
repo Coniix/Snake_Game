@@ -67,7 +67,7 @@ public class Snake : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) 
     {
         if (other.tag == "Food") { Grow(); }
-        else if (other.tag == "Obstacle") { ResetState(); }
+        //else if (other.tag == "Obstacle") { ResetState(); }
         else if (other.tag == "Wall") { wrapAround(); }
     }
 
