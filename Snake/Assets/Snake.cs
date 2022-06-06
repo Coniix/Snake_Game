@@ -12,6 +12,7 @@ public class Snake : MonoBehaviour
     public int initSize = 3;
     public string MainMenu;
     public int currScore = 0;
+    public bool moved = false;
     
 
     private void Start()
@@ -30,12 +31,12 @@ public class Snake : MonoBehaviour
             else {_direction = Vector2.down;}
         } 
         else if (Input.GetKeyDown(KeyCode.A)) { //left - a
-        if (_direction == Vector2.right) {}
-        else {_direction = Vector2.left;}
+            if (_direction == Vector2.right) {}
+            else {_direction = Vector2.left;}
         } 
         else if (Input.GetKeyDown(KeyCode.D)) { //right - d
-        if (_direction == Vector2.left) {}
-        else {_direction = Vector2.right;}
+            if (_direction == Vector2.left) {}
+            else {_direction = Vector2.right;}
         } 
         else if (Input.GetKeyDown(KeyCode.K)) { //kill - k
             ResetState();
@@ -67,7 +68,7 @@ public class Snake : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) 
     {
         if (other.tag == "Food") { Grow(); }
-        //else if (other.tag == "Obstacle") { ResetState(); }
+        else if (other.tag == "Obstacle") { ResetState(); }
         else if (other.tag == "Wall") { wrapAround(); }
     }
 
