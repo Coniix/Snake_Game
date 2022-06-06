@@ -12,7 +12,7 @@ public class Snake : MonoBehaviour
     public int initSize = 3;
     public string MainMenu;
     public int currScore = 0;
-    public bool moved = false;
+    private bool stepped = false;
     
 
     private void Start()
@@ -22,29 +22,36 @@ public class Snake : MonoBehaviour
 
     private void Update() 
     {
-        if (Input.GetKeyDown(KeyCode.W)) { //up - w
-            if (_direction == Vector2.down) {}
-            else {_direction = Vector2.up;}
-        } 
-        else if (Input.GetKeyDown(KeyCode.S)) { //down - s
-            if (_direction == Vector2.up) {}
-            else {_direction = Vector2.down;}
-        } 
-        else if (Input.GetKeyDown(KeyCode.A)) { //left - a
-            if (_direction == Vector2.right) {}
-            else {_direction = Vector2.left;}
-        } 
-        else if (Input.GetKeyDown(KeyCode.D)) { //right - d
-            if (_direction == Vector2.left) {}
-            else {_direction = Vector2.right;}
-        } 
-        else if (Input.GetKeyDown(KeyCode.K)) { //kill - k
-            ResetState();
+        if(!stepped) {
+            if (Input.GetKeyDown(KeyCode.W)) { //up - w
+                if (_direction == Vector2.down) {}
+                else {_direction = Vector2.up;
+                stepped = true;}
+            } 
+            else if (Input.GetKeyDown(KeyCode.S)) { //down - s
+                if (_direction == Vector2.up) {}
+                else {_direction = Vector2.down;
+                stepped = true;}
+            } 
+            else if (Input.GetKeyDown(KeyCode.A)) { //left - a
+                if (_direction == Vector2.right) {}
+                else {_direction = Vector2.left;
+                stepped = true;}
+            } 
+            else if (Input.GetKeyDown(KeyCode.D)) { //right - d
+                if (_direction == Vector2.left) {}
+                else {_direction = Vector2.right;
+                stepped = true;}
+            } 
+            else if (Input.GetKeyDown(KeyCode.K)) { //kill - k
+                ResetState();
+            }
         }
     }
 
     private void FixedUpdate() 
     {   
+        stepped = false;
         for(int i = segments.Count - 1; i > 0; i--) {
             segments[i].position = segments[i - 1].position;
         }
