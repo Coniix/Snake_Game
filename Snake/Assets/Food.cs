@@ -6,12 +6,14 @@ public class Food : MonoBehaviour
     public AudioSource eatSoundSource;
     public AudioClip eatSound;
     public Snake snake;
+    public PUPcontroller pup;
     public bool repositioned = false;
     
 
 
     private void Start() {
         snake = GameObject.Find("Snake").GetComponent<Snake>();
+        pup =FindObjectOfType<PUPcontroller>();
         RandomisePosition();
     }
 

@@ -7,14 +7,18 @@ public class GameOverScreen : MonoBehaviour
 {   
     public string mainMenuScene;
     public GameObject gameOverS;
-    //public bool isPaused;
     public Snake snake;
+    public PUPcontroller pup;
+    public PUPtimer timer;
 
 
     private void Start()
     {
         snake = FindObjectOfType<Snake>();
+        pup = FindObjectOfType<PUPcontroller>();
+        timer = FindObjectOfType<PUPtimer>();
     }
+
 
     public void isOver()
     {
@@ -24,8 +28,9 @@ public class GameOverScreen : MonoBehaviour
 
     public void retryGame()
     {
-        //isPaused = false;
         snake.ResetState();
+        pup.ResetPowerUps();
+        timer.resetTimers();
         gameOverS.SetActive(false);
         Time.timeScale = 1f;
     }

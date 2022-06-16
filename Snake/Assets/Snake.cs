@@ -12,39 +12,65 @@ public class Snake : MonoBehaviour
     public int initSize = 3;
     public string MainMenu;
     public int currScore = 0;
+    public int scoreIncrement = 1;
     private bool stepped = false;
-
+    public int speed = 1;
     public GameOverScreen gameOver;
-    
+    public PUPcontroller pup;
 
     private void Start()
     {
         gameOver = FindObjectOfType<GameOverScreen>();
+        pup = FindObjectOfType<PUPcontroller>();
         ResetState();
     } 
 
     private void Update() 
     {
+        GetInput();
+    }
+    
+    private void GetInput() {
         if(!stepped) {
             if (Input.GetKeyDown(KeyCode.W)) { //up - w
                 if (_direction == Vector2.down) {}
-                else {_direction = Vector2.up;
-                stepped = true;}
+                else if (pup.reversedCon && _direction != Vector2.up) {
+                    _direction = Vector2.down;
+                }
+                else {
+                    _direction = Vector2.up;
+                    stepped = true;
+                }
             } 
             else if (Input.GetKeyDown(KeyCode.S)) { //down - s
                 if (_direction == Vector2.up) {}
-                else {_direction = Vector2.down;
-                stepped = true;}
+                else if (pup.reversedCon && _direction != Vector2.down) {
+                    _direction = Vector2.up;
+                }
+                else {
+                    _direction = Vector2.down;
+                    stepped = true;
+                }
             } 
             else if (Input.GetKeyDown(KeyCode.A)) { //left - a
                 if (_direction == Vector2.right) {}
-                else {_direction = Vector2.left;
-                stepped = true;}
+                else if (pup.reversedCon && _direction != Vector2.left) {
+                    _direction = Vector2.right;
+                }
+                else {
+                    _direction = Vector2.left;
+                    stepped = true;
+                }
             } 
             else if (Input.GetKeyDown(KeyCode.D)) { //right - d
                 if (_direction == Vector2.left) {}
-                else {_direction = Vector2.right;
-                stepped = true;}
+                else if (pup.reversedCon && _direction != Vector2.right) {
+                    _direction = Vector2.left;
+                }
+                else {
+                    _direction = Vector2.right;
+                    stepped = true;
+                }
             } 
             else if (Input.GetKeyDown(KeyCode.K)) { //kill - k
                 ResetState();
@@ -67,11 +93,11 @@ public class Snake : MonoBehaviour
     }
 
     private void Grow()
-    {
+    {       
         Transform segment = Instantiate(this.segmentPrefab);
         segment.position = segments[segments.Count - 1].position;
         segments.Add(segment);
-        currScore++;
+        currScore += scoreIncrement;
         scoreCounter.text = currScore.ToString();
     }
 
