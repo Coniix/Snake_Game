@@ -122,13 +122,13 @@ public class Snake : MonoBehaviour
                 this.transform.position.y,
                 0.0f
             );
-        } else if (this.transform.position.y == 12) { //up to down
+        } else if (this.transform.position.y == 10) { //up to down
             this.transform.position = new Vector3(
                 this.transform.position.x,
                 this.transform.position.y - 23,
                 0.0f
             );
-        } else if (this.transform.position.y == -12) { //down to up
+        } else if (this.transform.position.y == -14) { //down to up
             this.transform.position = new Vector3(
                 this.transform.position.x,
                 this.transform.position.y + 23,

@@ -7,7 +7,7 @@ public class PUPcontroller : MonoBehaviour
 {
     private int pupCounter = 0;
     private int prevPUP = -1;
-    private float interval = 10f;
+    private float interval = 20f;
     public bool reversedCon = false;
     public BoxCollider2D gridArea;
     public Snake snake;
@@ -26,6 +26,11 @@ public class PUPcontroller : MonoBehaviour
     public AudioClip pickupSound;
     public AudioSource pickupSoundSource;
 
+    public GameObject DoubleSpeedIcon;
+    public GameObject DoublePointsIcon;
+    public GameObject LockedWallsIcon;
+    public GameObject ReversedControllsIcon;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,67 +48,34 @@ public class PUPcontroller : MonoBehaviour
 
         timer = FindObjectOfType<PUPtimer>();
         snake = GameObject.Find("Snake").GetComponent<Snake>();
-        Invoke("RandomisePosition", 5.0f);
+        Invoke("choosePowerUp", 5.0f);
     }
 
-    private bool checkPos(float x, float y)
-    {
-        for(int i = 0; i < snake.segments.Count -1; i++) {
-            if(snake.segments[i].position.x == x && snake.segments[i].position.y == y) return false;
-        }
-        return true;
-    }
-
-
-    private void RandomisePosition() 
-    {
-        Bounds bounds = this.gridArea.bounds;
-    
-        float x = Mathf.Round(Random.Range(bounds.min.x, bounds.max.x));
-        float y = Mathf.Round(Random.Range(bounds.min.y, bounds.max.y));
-    
-        if (checkPos(x, y)) this.transform.position = new Vector3(x, y, 0.0f);
-        else RandomisePosition();
-        powerUp.SetActive(true);
-    }
-
-    private void OnTriggerEnter2D(Collider2D other) 
-    {
-        if (other.tag == "Player") {
-            RandomisePosition();
-            choosePoweUp();
-            pickupSoundSource.clip = pickupSound;
-            pickupSoundSource.Play();
-        }
-    }
-
-    private void choosePoweUp() {
-        Invoke("RandomisePosition", Random.Range(5, interval));
+    private void choosePowerUp() {
+        Invoke("choosePowerUp", Random.Range(8, interval));
+        pickupSoundSource.clip = pickupSound;
+        pickupSoundSource.Play();
         int nextPUP = Random.Range(0, pupCounter);
         if (prevPUP == nextPUP) {
-            choosePoweUp();
+            choosePowerUp();
         }
         else {
             prevPUP = nextPUP;
             switch (nextPUP) {
             case 0: //double points
-                powerUp.SetActive(false);
                 timer.doublePTimer += 15f;
                 doublePoints();
                 break;
             case 1: //2x speed
-                powerUp.SetActive(false);
-                timer.doubleSTimer += 15f;
+                timer.doubleSTimer += 10f;
                 doubleSpeed();
                 break;
             case 2: //locked walls
-                powerUp.SetActive(false);
-                timer.lockedWallTimer += 15f;
+                timer.lockedWallTimer += 10f;
                 lockedWalls();
                 break;
             case 3: //reversed controls
-                powerUp.SetActive(false);
-                timer.reversedControllsTimer += 15f;
+                timer.reversedControllsTimer += 7f;
                 ReversedControls();
                 break;
         }
@@ -111,25 +83,29 @@ public class PUPcontroller : MonoBehaviour
     }
 
     private void doublePoints() {
-        pupLabel.text = pupNames[0].ToString();
+        //pupLabel.text = pupNames[0].ToString();
         snake.scoreIncrement = 2;
+        DoublePointsIcon.SetActive(true);
     }
     public void resetDoublePoints() {
         snake.scoreIncrement = 1;
-        pupLabel.text = "";
+        //pupLabel.text = "";
+        DoublePointsIcon.SetActive(false);
     }
 
     private void doubleSpeed() {
-        pupLabel.text = pupNames[1].ToString();
+        //pupLabel.text = pupNames[1].ToString();
         Time.fixedDeltaTime = 0.035f;
+        DoubleSpeedIcon.SetActive(true);
     }
     public void resetDoubleSpeed() {
         Time.fixedDeltaTime = 0.07f;
-        pupLabel.text = "";
+        //pupLabel.text = "";
+        DoubleSpeedIcon.SetActive(false);
     }
 
     private void lockedWalls() {
-        pupLabel.text = pupNames[2].ToString();
+        //pupLabel.text = pupNames[2].ToString();
         wallSpriteN.color = new Color(1, 0.92f, 0.016f, 1);
         wallSpriteE.color = new Color(1, 0.92f, 0.016f, 1);
         wallSpriteS.color = new Color(1, 0.92f, 0.016f, 1);
@@ -138,6 +114,7 @@ public class PUPcontroller : MonoBehaviour
         WallE.tag = "Obstacle";
         WallS.tag = "Obstacle";
         WallW.tag = "Obstacle";
+        LockedWallsIcon.SetActive(true);
     }
     public void resetLockedWalls() {
         wallSpriteN.color = new Color(0.50980392f, 0.44313725f, 0.44313725f, 1);
@@ -148,16 +125,19 @@ public class PUPcontroller : MonoBehaviour
         WallE.tag = "Wall";
         WallS.tag = "Wall";
         WallW.tag = "Wall";
-        pupLabel.text = "";
+        //pupLabel.text = "";
+        LockedWallsIcon.SetActive(false);
     }
 
     private void ReversedControls() {
-        pupLabel.text = pupNames[3].ToString();
+        //pupLabel.text = pupNames[3].ToString();
         reversedCon = true;
+        ReversedControllsIcon.SetActive(true);
     }
     public void ResetReversedControls() {
         reversedCon = false;
-        pupLabel.text = "";
+        //pupLabel.text = "";
+        ReversedControllsIcon.SetActive(false);
     }
 
     public void ResetPowerUps() {
@@ -176,8 +156,8 @@ public class PUPcontroller : MonoBehaviour
         WallW.tag = "Wall";
         //controls reset
         reversedCon = false;
-        pupLabel.text = "";
+        //pupLabel.text = "";
         //label reset
-        pupLabel.text = "";
+        //pupLabel.text = "";
     }
 }
