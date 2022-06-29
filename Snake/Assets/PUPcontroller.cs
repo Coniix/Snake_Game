@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class PUPcontroller : MonoBehaviour
 {
     private int pupCounter = 0;
     private int prevPUP = -1;
-    private float interval = 20f;
+    public float interval = 20f;
     public bool reversedCon = false;
     public BoxCollider2D gridArea;
     public Snake snake;
@@ -30,6 +31,9 @@ public class PUPcontroller : MonoBehaviour
     public GameObject DoublePointsIcon;
     public GameObject LockedWallsIcon;
     public GameObject ReversedControllsIcon;
+    public Image countDownSprite;
+    public GameObject countDownObject;
+
 
     // Start is called before the first frame update
     void Start()
@@ -49,36 +53,62 @@ public class PUPcontroller : MonoBehaviour
         timer = FindObjectOfType<PUPtimer>();
         snake = GameObject.Find("Snake").GetComponent<Snake>();
         Invoke("choosePowerUp", 5.0f);
+        countDownObject.SetActive(true);
+        StartCoroutine(countdownToPowerUp (countDownObject, 5.0f));
     }
 
     private void choosePowerUp() {
-        Invoke("choosePowerUp", Random.Range(8, interval));
-        pickupSoundSource.clip = pickupSound;
-        pickupSoundSource.Play();
+        countDownObject.GetComponent<Image>().fillAmount = 1f;
+        float timeToNextPowerUp = Random.Range(8, interval);
+
         int nextPUP = Random.Range(0, pupCounter);
         if (prevPUP == nextPUP) {
             choosePowerUp();
         }
         else {
+            StartCoroutine(countdownToPowerUp (countDownObject, timeToNextPowerUp - 0.1f));
+            Invoke("choosePowerUp", timeToNextPowerUp);
+            pickupSoundSource.clip = pickupSound;
+            pickupSoundSource.Play();
+
             prevPUP = nextPUP;
             switch (nextPUP) {
             case 0: //double points
-                timer.doublePTimer += 15f;
+                timer.doublePTimer += 5f;
                 doublePoints();
+                DoublePointsIcon.GetComponent<Image>().fillAmount = 1f;
+                StartCoroutine(countdownToPowerUp (DoublePointsIcon, timer.doublePTimer - 0.1f));
                 break;
             case 1: //2x speed
-                timer.doubleSTimer += 10f;
+                timer.doubleSTimer += 5f;
                 doubleSpeed();
+                DoubleSpeedIcon.GetComponent<Image>().fillAmount = 1f;
+                StartCoroutine(countdownToPowerUp (DoubleSpeedIcon, timer.doubleSTimer - 0.1f));
                 break;
             case 2: //locked walls
-                timer.lockedWallTimer += 10f;
+                timer.lockedWallTimer += 5f;
                 lockedWalls();
+                LockedWallsIcon.GetComponent<Image>().fillAmount = 1f;
+                StartCoroutine(countdownToPowerUp (LockedWallsIcon, timer.lockedWallTimer - 0.1f));
                 break;
             case 3: //reversed controls
-                timer.reversedControllsTimer += 7f;
+                timer.reversedControllsTimer += 5f;
                 ReversedControls();
+                ReversedControllsIcon.GetComponent<Image>().fillAmount = 1f;
+                StartCoroutine(countdownToPowerUp (ReversedControllsIcon, timer.reversedControllsTimer - 0.1f));
                 break;
         }
+        }
+    }
+
+    IEnumerator countdownToPowerUp(GameObject icon, float timeToNextPowerUp){
+        float elapsedTime = 0f;
+                Debug.Log("........." + timeToNextPowerUp);
+
+        while(elapsedTime < timeToNextPowerUp){
+            elapsedTime += Time.deltaTime;
+            icon.GetComponent<Image>().fillAmount = icon.GetComponent<Image>().fillAmount - Time.deltaTime/timeToNextPowerUp;
+            yield return null;
         }
     }
 
@@ -110,10 +140,10 @@ public class PUPcontroller : MonoBehaviour
         wallSpriteE.color = new Color(1, 0.92f, 0.016f, 1);
         wallSpriteS.color = new Color(1, 0.92f, 0.016f, 1);
         wallSpriteW.color = new Color(1, 0.92f, 0.016f, 1);
-        WallN.tag = "Obstacle";
+        /*WallN.tag = "Obstacle";
         WallE.tag = "Obstacle";
         WallS.tag = "Obstacle";
-        WallW.tag = "Obstacle";
+        WallW.tag = "Obstacle";*/
         LockedWallsIcon.SetActive(true);
     }
     public void resetLockedWalls() {
