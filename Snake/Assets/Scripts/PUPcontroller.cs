@@ -31,7 +31,6 @@ public class PUPcontroller : MonoBehaviour
     public GameObject DoublePointsIcon;
     public GameObject LockedWallsIcon;
     public GameObject ReversedControllsIcon;
-    public Image countDownSprite;
     public GameObject countDownObject;
 
 
